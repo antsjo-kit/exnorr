@@ -22,7 +22,6 @@
         fill="#FF00FF"
       />
     </svg>
-
     <div
       class="person-image"
       :style="{ backgroundImage: 'url(' + imgSrc + ')' }"
@@ -34,8 +33,6 @@
       :daysLeft="Math.abs(daysLeft)"
       :surName="surName"
     />
-
-    bdaytomorrow {{ isBirthdayTomorrow }}
   </div>
 </template>
 

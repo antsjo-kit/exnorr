@@ -1,41 +1,54 @@
 <template>
-  <div class="persons-page">
-    <carousel-3d
-      :loop="true"
-      :animation-speed="800"
-      :display="7"
-      :perspective="0"
-      :space="300"
-      :min-swipe-distance="1"
-      :inverse-scaling="100"
-      :disable3d="false"
-      :width="1180"
-      :height="780"
-      ref="mycarousel"
-      :count="$page.persons.edges.length"
-    >
-      <slide v-for="({ node }, i) in $page.persons.edges" :index="i" :key="i">
-        <template slot-scope="{ index, isCurrent, leftIndex, rightIndex }">
-          <PersonCard
-            :data-index="i"
-            :imgSrc="node.bild.file.url"
-            :birthday="node.fodelsedatum"
-            :surName="node.fornamn"
-            :lastName="node.efternamn"
-            :class="{
-              current: isCurrent,
-              onLeft: leftIndex >= 0,
-              onRight: rightIndex >= 0,
-            }"
-          />
-        </template>
-      </slide>
-    </carousel-3d>
-  </div>
+  <Layout>
+    <div class="persons-page" :class="{ show: !loading }">
+      <carousel-3d
+        v-show="!birthdays"
+        :animation-speed="800"
+        :display="7"
+        :space="300"
+        :min-swipe-distance="1"
+        :width="1180"
+        :height="780"
+        :perspective="180"
+        ref="mycarousel"
+        :count="$page.persons.edges.length"
+        @last-slide="onLastSlide"
+      >
+        <slide v-for="({ node }, i) in $page.persons.edges" :index="i" :key="i">
+          <template slot-scope="{ index, isCurrent, leftIndex, rightIndex }">
+            <PersonCard
+              :data-index="i"
+              :imgSrc="node.bild.file.url"
+              :birthday="node.fodelsedatum"
+              :surName="node.fornamn"
+              :lastName="node.efternamn"
+              :class="{
+                current: isCurrent,
+                onLeft: leftIndex >= 0,
+                onRight: rightIndex >= 0,
+              }"
+            />
+          </template>
+        </slide>
+      </carousel-3d>
+      <div class="person-birthdays" v-if="birthdays" style="color: white;">
+        <PersonBirthdayCard
+          v-for="birthday of birthdays"
+          :key="birthday.node.id"
+          :imgSrc="birthday.node.bild.file.url"
+          :birthday="birthday.node.fodelsedatum"
+          :surName="birthday.node.fornamn"
+          :lastName="birthday.node.efternamn"
+        />
+      </div>
+      <vue-progress-bar></vue-progress-bar>
+    </div>
+  </Layout>
 </template>
 
 <script>
 import PersonCard from "@/components/PersonCard";
+import PersonBirthdayCard from "@/components/PersonBirthdayCard";
 import CountdownTimer from "@/components/CountdownTimer";
 import { Carousel3d, Slide } from "vue-carousel-3d";
 
@@ -43,36 +56,76 @@ export default {
   components: {
     PersonCard,
     CountdownTimer,
+    PersonBirthdayCard,
     Carousel3d,
     Slide,
   },
   data() {
     return {
-      currentBirthday: null,
+      birthdays: null,
       sliding: false,
+      loading: true,
+      personsInterval: null,
+      lastSlideInterval: null,
+      slidePageInterval: null,
+      fadeInLoadingPersonInterval: null,
+      birthdayInterval: null,
     };
   },
-  mounted: function() {
-    this.checkForBirthdays();
-    let indexVariable = 0;
-    let timeOut = 10000;
-    this.$nextTick(function() {
-      window.setInterval(() => {
-        if (indexVariable < this.$page.persons.edges.length) {
-          indexVariable++;
-          this.changeSlide(indexVariable);
-        } else {
-          this.changeSlide(0);
-          indexVariable = 0;
-        }
-      }, timeOut);
-    });
+  beforeDestroy() {
+    clearInterval(this.personsInterval);
+    clearInterval(this.lastSlideInterval);
+    clearInterval(this.fadeInLoadingPersonInterval);
+    clearInterval(this.birthdayInterval);
   },
+  created() {
+    this.fadeInLoadingPersonInterval = window.setInterval(() => {
+      this.loading = false;
+    }, 1000);
+  },
+  mounted: function() {
+    this.$moment.locale("en");
+    this.$Progress.set(0);
+    const hasBirthdays = this.checkForBirthdays();
+    if (hasBirthdays) {
+      this.birthdays = hasBirthdays;
+      this.birthdayInterval = window.setInterval(() => {
+        this.$router.push({ path: "/slideshow" });
+      }, 1800000);
+    } else {
+      let indexVariable = 0;
+      let timeOut = 15000;
+      if (this.$page.persons.edges.length) {
+        this.$nextTick(function() {
+          this.personsInterval = window.setInterval(() => {
+            if (indexVariable < this.$page.persons.edges.length - 1) {
+              indexVariable++;
+              const progress =
+                (indexVariable / (this.$page.persons.edges.length - 1)) * 100;
+              this.$Progress.set(progress);
+              this.changeSlide(indexVariable);
+            }
+          }, timeOut);
+        });
+      }
+    }
+  },
+
   methods: {
+    start() {
+      this.$Progress.start();
+    },
     changeSlide(index) {
       if (this.$refs && this.$refs.mycarousel && index) {
         this.$refs.mycarousel.goSlide(index);
       }
+    },
+    onLastSlide(index) {
+      this.$nextTick(() => {
+        this.lastSlideInterval = window.setInterval(() => {
+          this.$router.push({ path: "/slideshow" });
+        }, 15000);
+      });
     },
     checkForBirthdays() {
       const today = new Date();
@@ -86,11 +139,11 @@ export default {
           birthday.setYear(0);
           if (today.valueOf() == birthday.valueOf()) {
             return node;
+          } else {
+            console.log({ "not birthday": node });
           }
         });
-        birthdays.length
-          ? console.log({ "has birthdays": birthdays })
-          : console.log("no birthdays");
+        return birthdays.length ? birthdays : false;
       }
     },
   },
@@ -101,7 +154,32 @@ export default {
 body {
   font-family: Arial;
 }
+
+.person-birthdays {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  justify-content: center;
+  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.95)),
+    url("~@/assets/happy.gif");
+  background-size: cover;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  .person-birthday-card {
+    margin-right: 86px;
+    z-index: 9999;
+    &:last-child {
+      margin-right: 0px;
+    }
+  }
+}
 .persons-page {
+  opacity: 0;
+  transition: opacity 3s ease;
+  &.show {
+    opacity: 1;
+  }
   background: black;
   height: 100%;
   min-height: 100%;
@@ -240,50 +318,7 @@ body {
       display: none;
     }
   }
-  //   &.left-2 {
-  //     width: 106px !important;
-  //     height: 106px !important;
-  //   }
-  //   &.left-3 {
-  //     width: 69px !important;
-  //     height: 69px !important;
-  //   }
-  //   &.right-1 {
-  //     width: 145px !important;
-  //     height: 145px !important;
-  //   }
-  //   &.right-2 {
-  //     width: 106px !important;
-  //     height: 106px !important;
-  //   }
-  //   &.right-3 {
-  //     width: 69px !important;
-  //     height: 69px !important;
-  //   }
 }
-// .app-hooper-slider {
-//   height: 500px;
-//   .hooper-slide {
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//   }
-// }
-
-// .is-active {
-//   .person-img {
-//     width: 10em;
-//     height: 10em;
-//     opacity: 0.5;
-//   }
-//   &.is-current {
-//     .person-img {
-//       width: 320px;
-//       height: 320px;
-//       opacity: 1;
-//     }
-//   }
-// }
 </style>
 
 <page-query>

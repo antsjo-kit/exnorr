@@ -1,4 +1,4 @@
-const c1 = () => import(/* webpackChunkName: "page--src-pages-personer-vue" */ "C:\\Users\\Anton\\Documents\\GitHub\\exnorr\\src\\pages\\Personer.vue")
+const c1 = () => import(/* webpackChunkName: "page--src-pages-slideshow-vue" */ "C:\\Users\\Anton\\Documents\\GitHub\\exnorr\\src\\pages\\Slideshow.vue")
 const c2 = () => import(/* webpackChunkName: "page--src-pages-persons-vue" */ "C:\\Users\\Anton\\Documents\\GitHub\\exnorr\\src\\pages\\Persons.vue")
 const c3 = () => import(/* webpackChunkName: "page--src-pages-about-vue" */ "C:\\Users\\Anton\\Documents\\GitHub\\exnorr\\src\\pages\\About.vue")
 const c4 = () => import(/* webpackChunkName: "page--node-modules-gridsome-app-pages-404-vue" */ "C:\\Users\\Anton\\Documents\\GitHub\\exnorr\\node_modules\\gridsome\\app\\pages\\404.vue")
@@ -6,7 +6,7 @@ const c5 = () => import(/* webpackChunkName: "page--src-pages-index-vue" */ "C:\
 
 export default [
   {
-    path: "/personer/",
+    path: "/slideshow/",
     component: c1
   },
   {
