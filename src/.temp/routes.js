@@ -1,8 +1,8 @@
-const c1 = () => import(/* webpackChunkName: "page--src--pages--personer-vue" */ "/Users/antonsjolander/Documents/GitHub/exnorrtv/src/pages/Personer.vue")
-const c2 = () => import(/* webpackChunkName: "page--src--pages--persons-vue" */ "/Users/antonsjolander/Documents/GitHub/exnorrtv/src/pages/Persons.vue")
-const c3 = () => import(/* webpackChunkName: "page--src--pages--about-vue" */ "/Users/antonsjolander/Documents/GitHub/exnorrtv/src/pages/About.vue")
-const c4 = () => import(/* webpackChunkName: "page--node-modules--gridsome--app--pages--404-vue" */ "/Users/antonsjolander/Documents/GitHub/exnorrtv/node_modules/gridsome/app/pages/404.vue")
-const c5 = () => import(/* webpackChunkName: "page--src--pages--index-vue" */ "/Users/antonsjolander/Documents/GitHub/exnorrtv/src/pages/Index.vue")
+const c1 = () => import(/* webpackChunkName: "page--src-pages-personer-vue" */ "C:\\Users\\Anton\\Documents\\GitHub\\exnorr\\src\\pages\\Personer.vue")
+const c2 = () => import(/* webpackChunkName: "page--src-pages-persons-vue" */ "C:\\Users\\Anton\\Documents\\GitHub\\exnorr\\src\\pages\\Persons.vue")
+const c3 = () => import(/* webpackChunkName: "page--src-pages-about-vue" */ "C:\\Users\\Anton\\Documents\\GitHub\\exnorr\\src\\pages\\About.vue")
+const c4 = () => import(/* webpackChunkName: "page--node-modules-gridsome-app-pages-404-vue" */ "C:\\Users\\Anton\\Documents\\GitHub\\exnorr\\node_modules\\gridsome\\app\\pages\\404.vue")
+const c5 = () => import(/* webpackChunkName: "page--src-pages-index-vue" */ "C:\\Users\\Anton\\Documents\\GitHub\\exnorr\\src\\pages\\Index.vue")
 
 export default [
   {
