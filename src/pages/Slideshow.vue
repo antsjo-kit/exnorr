@@ -54,19 +54,25 @@ export default {
     };
   },
   mounted() {
-    this.slidePageInterval = window.setInterval(() => {
-      this.$router.push({ path: "/persons" });
-    }, 300000);
-    if (this.$refs && this.$refs.agilecarousel) {
-      this.changeSlideInterval = window.setInterval(() => {
-        this.$refs.agilecarousel.goToNext();
-      }, 15000);
+    if (process.isClient) {
+      // browser only code
+      this.slidePageInterval = window.setInterval(() => {
+        this.$router.push({ path: "/persons" });
+      }, 300000);
+      if (this.$refs && this.$refs.agilecarousel) {
+        this.changeSlideInterval = window.setInterval(() => {
+          this.$refs.agilecarousel.goToNext();
+        }, 15000);
+      }
     }
   },
   async created() {
-    this.fadeInLoadingInterval = window.setInterval(() => {
-      this.loading = false;
-    }, 1000);
+    if (process.isClient) {
+      // browser only code
+      this.fadeInLoadingInterval = window.setInterval(() => {
+        this.loading = false;
+      }, 1000);
+    }
   },
   beforeDestroy() {
     if (this.fadeInLoadingInterval) {

@@ -115,9 +115,12 @@ export default {
     },
   },
   created() {
-    this.fadeInLoadingPersonInterval = window.setInterval(() => {
-      this.loading = false;
-    }, 1000);
+    if (process.isClient) {
+      // browser only code
+      this.fadeInLoadingPersonInterval = window.setInterval(() => {
+        this.loading = false;
+      }, 1000);
+    }
   },
   mounted: function() {
     this.$moment.locale("en");
@@ -125,25 +128,31 @@ export default {
     const hasBirthdays = this.checkForBirthdays();
     if (hasBirthdays) {
       this.birthdays = hasBirthdays;
-      this.birthdayInterval = window.setInterval(() => {
-        this.$router.push({ path: "/slideshow" });
-      }, 300000);
+      if (process.isClient) {
+        // browser only code
+        this.birthdayInterval = window.setInterval(() => {
+          this.$router.push({ path: "/slideshow" });
+        }, 300000);
+      }
     } else {
       let indexVariable = 0;
       let timeOut = 5000;
       if (this.$page.persons.edges.length) {
         this.$nextTick(function() {
-          this.personsInterval = window.setInterval(() => {
-            if (indexVariable < this.$page.persons.edges.length - 1) {
-              indexVariable++;
-              const progress =
-                (indexVariable / (this.$page.persons.edges.length - 1)) * 100;
-              this.$Progress.set(progress);
-              this.changeSlide(indexVariable);
-            } else {
-              this.$router.push({ path: "/slideshow" });
-            }
-          }, timeOut);
+          if (process.isClient) {
+            // browser only code
+            this.personsInterval = window.setInterval(() => {
+              if (indexVariable < this.$page.persons.edges.length - 1) {
+                indexVariable++;
+                const progress =
+                  (indexVariable / (this.$page.persons.edges.length - 1)) * 100;
+                this.$Progress.set(progress);
+                this.changeSlide(indexVariable);
+              } else {
+                this.$router.push({ path: "/slideshow" });
+              }
+            }, timeOut);
+          }
         });
       }
     }
