@@ -58,7 +58,6 @@
 import PersonCard from "@/components/PersonCard";
 import PersonBirthdayCard from "@/components/PersonBirthdayCard";
 import CountdownTimer from "@/components/CountdownTimer";
-import { Carousel3d, Slide } from "vue-carousel-3d";
 
 export default {
   components: {
@@ -160,7 +159,7 @@ export default {
                 indexVariable++;
                 const progress =
                   (indexVariable / (this.$page.persons.edges.length - 1)) * 100;
-                this.$Progress.set(progress);
+                // this.$Progress.set(progress);
                 this.changeSlide(indexVariable);
               } else {
                 this.$router.push({ path: "/slideshow" });
