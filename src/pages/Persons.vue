@@ -48,7 +48,7 @@
             :lastName="birthday.node.efternamn"
           />
         </div>
-        <vue-progress-bar></vue-progress-bar>
+        <!-- <vue-progress-bar></vue-progress-bar> -->
       </div>
     </ClientOnly>
   </Layout>
