@@ -1,15 +1,20 @@
 <template>
   <div>
-    <Countdown v-if="getTomorrow" :deadline="getTomorrow"></Countdown>
+    <vac :end-time="getTomorrow">
+      <div class="clock-timer" slot="process" slot-scope="{ timeObj }">
+        {{ `${timeObj.h} : ${timeObj.m} : ${timeObj.s}` }}
+        <div class="clock-timer-text">
+          <div>HOUR</div>
+          <div>MINUTES</div>
+          <div>SECONDS</div>
+        </div>
+      </div>
+    </vac>
   </div>
 </template>
 
 <script>
-import Countdown from "vuejs-countdown";
 export default {
-  components: {
-    Countdown,
-  },
   computed: {
     getTomorrow: function() {
       const today = new Date();
@@ -23,4 +28,29 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.clock-timer {
+  font-family: Arial;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 236px;
+  line-height: initial;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+
+  .clock-timer-text {
+    margin-left: 5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    line-height: initial;
+    font-family: Arial;
+    font-style: normal;
+    font-weight: normal;
+    width: 91%;
+    font-size: 48px;
+    text-transform: uppercase;
+  }
+}
+</style>

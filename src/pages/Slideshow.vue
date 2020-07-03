@@ -4,8 +4,10 @@
       <agile
         :nav-buttons="false"
         ref="agilecarousel"
-        fade="fade"
-        v-if="
+        :fade="true"
+        :speed="800"
+        :initial-slide="1"
+        v-show="
           $page &&
             $page.images &&
             $page.images.edges &&
@@ -27,33 +29,6 @@
           }"
         ></div>
       </agile>
-      <div class="news-container" v-if="articles && articles.length">
-        <div class="news" :key="articles[selectedIndex].url">
-          <div
-            v-if="articles[selectedIndex].urlToImage"
-            class="news-img"
-            :style="{
-              backgroundImage:
-                'url(' + articles[selectedIndex].urlToImage + ')',
-            }"
-          ></div>
-          <h1
-            class="news-title animate__animated animate__backInLeft"
-            v-if="articles[selectedIndex].title"
-          >
-            {{ articles[selectedIndex].title }}
-          </h1>
-          <p class="news-date" v-if="articles[selectedIndex].publishedAt">
-            {{ articles[selectedIndex].publishedAt | moment("LLL") }}
-          </p>
-        </div>
-
-        <transition name="fade" mode="out-in">
-          <div class="news-progress " :key="articles[selectedIndex].url">
-            <div class="news-progress-fill"></div>
-          </div>
-        </transition>
-      </div>
       <div class="digital-clock">
         <digital-clock :blink="true" />
         <p class="date">{{ new Date() | moment("LL") }}</p>
@@ -63,7 +38,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import DigitalClock from "vue-digital-clock";
 
 export default {
@@ -72,72 +46,43 @@ export default {
   },
   data() {
     return {
-      fact: null,
-      articles: null,
       selectedIndex: 0,
-      newsInterval: null,
       loading: true,
+      fadeInLoadingInterval: null,
+      changeSlideInterval: null,
+      slidePageInterval: null,
     };
   },
   mounted() {
     this.slidePageInterval = window.setInterval(() => {
       this.$router.push({ path: "/persons" });
-    }, 600000);
+    }, 300000);
+    if (this.$refs && this.$refs.agilecarousel) {
+      this.changeSlideInterval = window.setInterval(() => {
+        this.$refs.agilecarousel.goToNext();
+      }, 15000);
+    }
   },
   async created() {
-    this.setLanguage();
-    this.getNews();
     this.fadeInLoadingInterval = window.setInterval(() => {
       this.loading = false;
     }, 1000);
   },
-  computed: {
-    progress: function() {
-      return (this.selectedIndex / (this.articles.length - 1)) * 100;
-    },
-  },
   beforeDestroy() {
-    clearInterval(this.newsInterval);
-    clearInterval(this.slidePageInterval);
-    clearInterval(this.fadeInLoadingInterval);
+    if (this.fadeInLoadingInterval) {
+      clearInterval(this.fadeInLoadingInterval);
+    }
+    if (this.changeSlideInterval) {
+      clearInterval(this.changeSlideInterval);
+    }
+    if (this.slidePageInterval) {
+      clearInterval(this.slidePageInterval);
+    }
   },
   methods: {
     setLanguage() {
       this.$moment.locale("sv");
       console.log(this.$moment.locale());
-    },
-
-    switchNews() {
-      if (this.articles && this.articles.length) {
-        this.$nextTick(() => {
-          this.newsInterval = window.setInterval(() => {
-            if (this.selectedIndex < this.articles.length - 1) {
-              this.selectedIndex++;
-              this.$refs.agilecarousel.goToNext();
-            } else {
-              this.selectedIndex = 0;
-            }
-          }, 30000);
-        });
-      }
-    },
-    async getNews() {
-      const url =
-        "http://newsapi.org/v2/top-headlines?" +
-        "country=se&" +
-        `apiKey=e6351516c969426580878a07518bc70e`;
-      try {
-        const {
-          data: { articles: articles },
-        } = await axios.get(url);
-        if (articles) {
-          this.articles = articles;
-          this.switchNews();
-        }
-        console.log({ news: articles });
-      } catch (error) {
-        console.log({ error: error });
-      }
     },
   },
 };
@@ -162,41 +107,9 @@ query {
 </page-query>
 
 <style lang="scss">
-@keyframes newsprogress {
-  0% {
-    transform: scaleX(0);
-  }
-  25% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-@keyframes fadenews {
-  0% {
-    opacity: 0;
-    transform: scale(1);
-  }
-  10% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 1;
-  }
-  60% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
-
 .digital-clock {
   position: absolute;
-  bottom: 12%;
+  bottom: 8%;
   right: 5%;
   line-height: 7vw;
   color: white;
@@ -217,83 +130,11 @@ query {
     font-size: 8vw;
   }
 }
-.news-progress {
-  width: 100%;
-  height: 5px;
-  position: relative;
-  background: rgba($color: white, $alpha: 0.1);
-  backdrop-filter: blur(8px);
-  animation: newsprogress 1s ease-in-out;
-  transform-origin: left;
-
-  .news-progress-fill {
-    position: absolute;
-    background: #ff00ff;
-    left: 0;
-    bottom: 0;
-    height: 100%;
-    opacity: 0;
-    width: 100%;
-    transform: scaleX(0);
-    will-change: transform;
-    animation: newsprogress 30s ease-in-out;
-    transform-origin: left;
-  }
-}
-.news-container {
-  color: white;
-  position: absolute;
-  z-index: 999;
-  bottom: 15%;
-  left: 5%;
-  width: 30%;
-  .news {
-    background: rgba($color: #000000, $alpha: 0.1);
-    backdrop-filter: blur(8px);
-    padding: 1.2rem;
-    transform: scale(1);
-    will-change: transform;
-    animation: fadenews 30s ease-in-out;
-    transform-origin: bottom left;
-    .news-img {
-      background-size: cover !important;
-      background-position: top !important;
-      background-repeat: no-repeat !important;
-      height: 300px;
-      width: 100%;
-    }
-    .news-title {
-      font-size: 2.8rem;
-      line-height: 3.9rem;
-    }
-    .news-date {
-      font-size: 1rem;
-      line-height: 1rem;
-      opacity: 0.5;
-      text-transform: uppercase;
-    }
-    img {
-      width: 100%;
-      display: block;
-      max-width: 100%;
-      height: auto;
-      min-height: 268px;
-      max-height: 500px;
-      background: rgba($color: #000000, $alpha: 0.9);
-    }
-  }
-}
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
 
 .slideshow {
   opacity: 0;
   transition: opacity 3s ease;
+  height: 100vh;
   &.show {
     opacity: 1;
   }
@@ -331,7 +172,6 @@ query {
   height: 100vh;
   width: 100%;
 }
-
 .slide {
   display: block;
   height: 100vh;

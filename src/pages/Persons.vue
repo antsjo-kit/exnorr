@@ -2,19 +2,19 @@
   <Layout>
     <div class="persons-page" :class="{ show: !loading }">
       <carousel-3d
-        v-show="!birthdays"
+        v-show="!birthdays && $page.persons.edges && $page.persons.edges.length"
         :animation-speed="800"
         :display="7"
         :space="300"
         :min-swipe-distance="1"
         :width="1180"
+        :infinite="true"
         :height="780"
         :perspective="180"
         ref="mycarousel"
         :count="$page.persons.edges.length"
-        @last-slide="onLastSlide"
       >
-        <slide v-for="({ node }, i) in $page.persons.edges" :index="i" :key="i">
+        <slide v-for="({ node }, i) in sortedPersonsByDate" :index="i" :key="i">
           <template slot-scope="{ index, isCurrent, leftIndex, rightIndex }">
             <PersonCard
               :data-index="i"
@@ -73,10 +73,46 @@ export default {
     };
   },
   beforeDestroy() {
-    clearInterval(this.personsInterval);
-    clearInterval(this.lastSlideInterval);
-    clearInterval(this.fadeInLoadingPersonInterval);
-    clearInterval(this.birthdayInterval);
+    if (this.personsInterval) {
+      clearInterval(this.personsInterval);
+    }
+    if (this.lastSlideInterval) {
+      clearInterval(this.lastSlideInterval);
+    }
+    if (this.fadeInLoadingPersonInterval) {
+      clearInterval(this.fadeInLoadingPersonInterval);
+    }
+    if (this.birthdayInterval) {
+      clearInterval(this.birthdayInterval);
+    }
+  },
+  computed: {
+    sortedPersonsByDate: function() {
+      if (this.$page.persons.edges) {
+        const personsArray = [...this.$page.persons.edges];
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        today.setYear(0);
+
+        for (const { node } of personsArray) {
+          const birthday = new Date(Date.parse(node.fodelsedatum));
+          birthday.setHours(0, 0, 0, 0);
+          birthday.setYear(0);
+          var Difference_In_Time = birthday.getTime() - today.getTime();
+          var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+          node.daysLeft = Math.abs(Difference_In_Days);
+        }
+
+        const sortedPersons = this._.orderBy(
+          personsArray,
+          ["node.daysLeft"],
+          ["asc"]
+        );
+        return sortedPersons;
+      } else {
+        return false;
+      }
+    },
   },
   created() {
     this.fadeInLoadingPersonInterval = window.setInterval(() => {
@@ -91,10 +127,10 @@ export default {
       this.birthdays = hasBirthdays;
       this.birthdayInterval = window.setInterval(() => {
         this.$router.push({ path: "/slideshow" });
-      }, 1800000);
+      }, 300000);
     } else {
       let indexVariable = 0;
-      let timeOut = 15000;
+      let timeOut = 5000;
       if (this.$page.persons.edges.length) {
         this.$nextTick(function() {
           this.personsInterval = window.setInterval(() => {
@@ -104,6 +140,8 @@ export default {
                 (indexVariable / (this.$page.persons.edges.length - 1)) * 100;
               this.$Progress.set(progress);
               this.changeSlide(indexVariable);
+            } else {
+              this.$router.push({ path: "/slideshow" });
             }
           }, timeOut);
         });
@@ -120,13 +158,6 @@ export default {
         this.$refs.mycarousel.goSlide(index);
       }
     },
-    onLastSlide(index) {
-      this.$nextTick(() => {
-        this.lastSlideInterval = window.setInterval(() => {
-          this.$router.push({ path: "/slideshow" });
-        }, 15000);
-      });
-    },
     checkForBirthdays() {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -140,7 +171,7 @@ export default {
           if (today.valueOf() == birthday.valueOf()) {
             return node;
           } else {
-            console.log({ "not birthday": node });
+            return false;
           }
         });
         return birthdays.length ? birthdays : false;

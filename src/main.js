@@ -4,6 +4,10 @@ import VueProgressBar from "vue-progressbar";
 import VueAgile from "vue-agile";
 import VueResizeText from "vue-resize-text";
 import ProgressBar from "vuejs-progress-bar";
+import VueLodash from "vue-lodash";
+import orderBy from "lodash/orderBy";
+import shuffle from "lodash/shuffle";
+import vueAwesomeCountdown from "vue-awesome-countdown";
 
 import "animate.css";
 import "../src/assets/main.scss";
@@ -13,9 +17,11 @@ export default function(Vue) {
   Vue.use(require("vue-moment"), {
     moment,
   });
+  Vue.use(vueAwesomeCountdown, "vac");
   Vue.use(VueResizeText);
   Vue.use(VueAgile);
   Vue.use(ProgressBar);
+  Vue.use(VueLodash, { lodash: { orderBy, shuffle } });
   Vue.use(VueProgressBar, {
     color: "#FF00FF",
     failedColor: "red",
