@@ -20,8 +20,8 @@ export default function(Vue, { isClient }) {
 
   Vue.use(VueLodash, { lodash: { orderBy, shuffle } });
 
+  // const VueProgressBar = require("vue-progressbar").default;
   // if (isClient) {
-  //   const VueProgressBar = require("vue-progressbar").default;
   //   Vue.use(VueProgressBar, {
   //     color: "#FF00FF",
   //     failedColor: "red",

@@ -132,7 +132,7 @@ export default {
   },
   mounted: function() {
     this.$moment.locale("en");
-    this.$Progress.set(0);
+    // this.$Progress.set(0);
     const hasBirthdays = this.checkForBirthdays();
     if (hasBirthdays) {
       this.birthdays = hasBirthdays;
