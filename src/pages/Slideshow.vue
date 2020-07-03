@@ -1,39 +1,41 @@
 <template>
   <Layout>
-    <div class="slideshow" :class="{ show: !loading }">
-      <agile
-        :nav-buttons="false"
-        ref="agilecarousel"
-        :fade="true"
-        :speed="800"
-        :initial-slide="1"
-        v-show="
-          $page &&
-            $page.images &&
-            $page.images.edges &&
-            $page.images.edges[0] &&
-            $page.images.edges[0].node &&
-            $page.images.edges[0].node.bilder
-        "
-      >
-        <div
-          :key="indx"
-          v-for="(slide, indx) of $page.images.edges[0].node.bilder"
-          class="slideshow-img"
-          :style="{
-            background:
-              'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75)), url(' +
-              slide.file.url +
-              '?w=1920' +
-              ')',
-          }"
-        ></div>
-      </agile>
-      <div class="digital-clock">
-        <digital-clock :blink="true" />
-        <p class="date">{{ new Date() | moment("LL") }}</p>
+    <ClientOnly>
+      <div class="slideshow" :class="{ show: !loading }">
+        <agile
+          :nav-buttons="false"
+          ref="agilecarousel"
+          :fade="true"
+          :speed="800"
+          :initial-slide="1"
+          v-show="
+            $page &&
+              $page.images &&
+              $page.images.edges &&
+              $page.images.edges[0] &&
+              $page.images.edges[0].node &&
+              $page.images.edges[0].node.bilder
+          "
+        >
+          <div
+            :key="indx"
+            v-for="(slide, indx) of $page.images.edges[0].node.bilder"
+            class="slideshow-img"
+            :style="{
+              background:
+                'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75)), url(' +
+                slide.file.url +
+                '?w=1920' +
+                ')',
+            }"
+          ></div>
+        </agile>
+        <div class="digital-clock">
+          <digital-clock :blink="true" />
+          <p class="date">{{ new Date() | moment("LL") }}</p>
+        </div>
       </div>
-    </div>
+    </ClientOnly>
   </Layout>
 </template>
 

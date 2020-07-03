@@ -1,48 +1,56 @@
 <template>
   <Layout>
-    <div class="persons-page" :class="{ show: !loading }">
-      <carousel-3d
-        v-show="!birthdays && $page.persons.edges && $page.persons.edges.length"
-        :animation-speed="800"
-        :display="7"
-        :space="300"
-        :min-swipe-distance="1"
-        :width="1180"
-        :infinite="true"
-        :height="780"
-        :perspective="180"
-        ref="mycarousel"
-        :count="$page.persons.edges.length"
-      >
-        <slide v-for="({ node }, i) in sortedPersonsByDate" :index="i" :key="i">
-          <template slot-scope="{ index, isCurrent, leftIndex, rightIndex }">
-            <PersonCard
-              :data-index="i"
-              :imgSrc="node.bild.file.url"
-              :birthday="node.fodelsedatum"
-              :surName="node.fornamn"
-              :lastName="node.efternamn"
-              :class="{
-                current: isCurrent,
-                onLeft: leftIndex >= 0,
-                onRight: rightIndex >= 0,
-              }"
-            />
-          </template>
-        </slide>
-      </carousel-3d>
-      <div class="person-birthdays" v-if="birthdays" style="color: white;">
-        <PersonBirthdayCard
-          v-for="birthday of birthdays"
-          :key="birthday.node.id"
-          :imgSrc="birthday.node.bild.file.url"
-          :birthday="birthday.node.fodelsedatum"
-          :surName="birthday.node.fornamn"
-          :lastName="birthday.node.efternamn"
-        />
+    <ClientOnly>
+      <div class="persons-page" :class="{ show: !loading }">
+        <carousel-3d
+          v-show="
+            !birthdays && $page.persons.edges && $page.persons.edges.length
+          "
+          :animation-speed="800"
+          :display="7"
+          :space="300"
+          :min-swipe-distance="1"
+          :width="1180"
+          :infinite="true"
+          :height="780"
+          :perspective="180"
+          ref="mycarousel"
+          :count="$page.persons.edges.length"
+        >
+          <slide
+            v-for="({ node }, i) in sortedPersonsByDate"
+            :index="i"
+            :key="i"
+          >
+            <template slot-scope="{ index, isCurrent, leftIndex, rightIndex }">
+              <PersonCard
+                :data-index="i"
+                :imgSrc="node.bild.file.url"
+                :birthday="node.fodelsedatum"
+                :surName="node.fornamn"
+                :lastName="node.efternamn"
+                :class="{
+                  current: isCurrent,
+                  onLeft: leftIndex >= 0,
+                  onRight: rightIndex >= 0,
+                }"
+              />
+            </template>
+          </slide>
+        </carousel-3d>
+        <div class="person-birthdays" v-if="birthdays" style="color: white;">
+          <PersonBirthdayCard
+            v-for="birthday of birthdays"
+            :key="birthday.node.id"
+            :imgSrc="birthday.node.bild.file.url"
+            :birthday="birthday.node.fodelsedatum"
+            :surName="birthday.node.fornamn"
+            :lastName="birthday.node.efternamn"
+          />
+        </div>
+        <vue-progress-bar></vue-progress-bar>
       </div>
-      <vue-progress-bar></vue-progress-bar>
-    </div>
+    </ClientOnly>
   </Layout>
 </template>
 
