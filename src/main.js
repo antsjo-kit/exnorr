@@ -2,7 +2,6 @@ import DefaultLayout from "~/layouts/Default.vue";
 const moment = require("moment");
 import VueProgressBar from "vue-progressbar";
 import VueAgile from "vue-agile";
-import VueResizeText from "vue-resize-text";
 import ProgressBar from "vuejs-progress-bar";
 import VueLodash from "vue-lodash";
 import orderBy from "lodash/orderBy";
@@ -18,7 +17,6 @@ export default function(Vue) {
     moment,
   });
   Vue.use(vueAwesomeCountdown, "vac");
-  Vue.use(VueResizeText);
   Vue.use(VueAgile);
   Vue.use(ProgressBar);
   Vue.use(VueLodash, { lodash: { orderBy, shuffle } });
