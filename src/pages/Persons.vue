@@ -125,7 +125,7 @@ export default {
   created() {
     if (process.isClient) {
       // browser only code
-      this.fadeInLoadingPersonInterval = window.setInterval(() => {
+      this.fadeInLoadingPersonInterval = setInterval(() => {
         this.loading = false;
       }, 1000);
     }
@@ -138,7 +138,7 @@ export default {
       this.birthdays = hasBirthdays;
       if (process.isClient) {
         // browser only code
-        this.birthdayInterval = window.setInterval(() => {
+        this.birthdayInterval = setInterval(() => {
           this.$router.push({ path: "/slideshow" });
         }, 300000);
       }
@@ -149,7 +149,7 @@ export default {
         this.$nextTick(function() {
           if (process.isClient) {
             // browser only code
-            this.personsInterval = window.setInterval(() => {
+            this.personsInterval = setInterval(() => {
               if (indexVariable < this.$page.persons.edges.length - 1) {
                 indexVariable++;
                 const progress =

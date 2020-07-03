@@ -58,11 +58,11 @@ export default {
   mounted() {
     if (process.isClient) {
       // browser only code
-      this.slidePageInterval = window.setInterval(() => {
+      this.slidePageInterval = setInterval(() => {
         this.$router.push({ path: "/persons" });
       }, 300000);
       if (this.$refs && this.$refs.agilecarousel) {
-        this.changeSlideInterval = window.setInterval(() => {
+        this.changeSlideInterval = setInterval(() => {
           this.$refs.agilecarousel.goToNext();
         }, 15000);
       }
@@ -71,7 +71,7 @@ export default {
   async created() {
     if (process.isClient) {
       // browser only code
-      this.fadeInLoadingInterval = window.setInterval(() => {
+      this.fadeInLoadingInterval = setInterval(() => {
         this.loading = false;
       }, 1000);
     }
