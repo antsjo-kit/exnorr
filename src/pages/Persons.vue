@@ -65,8 +65,14 @@ export default {
     PersonCard,
     CountdownTimer,
     PersonBirthdayCard,
-    Carousel3d,
-    Slide,
+    Carousel3d: () =>
+      import("vue-carousel-3d")
+        .then((m) => m.Carousel3d)
+        .catch(),
+    Slide: () =>
+      import("vue-carousel-3d")
+        .then((m) => m.Slide)
+        .catch(),
   },
   data() {
     return {
