@@ -7,6 +7,8 @@
           ref="agilecarousel"
           :fade="true"
           :speed="800"
+          :autoplay="true"
+          :autoplay-speed="5000"
           :initial-slide="1"
           v-show="
             $page &&
