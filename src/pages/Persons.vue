@@ -250,6 +250,7 @@ body {
   background: transparent !important;
   border: 0px solid !important;
   opacity: 0.6 !important;
+  will-change: transform !important;
   &.left-1 {
     transform: translateX(-330px) translateZ(-200px) rotateY(0deg) !important;
     .person-image {
