@@ -247,7 +247,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: transparent;
+  background: transparent !important;
   border: 0px solid !important;
   opacity: 0.6 !important;
   &.left-1 {
