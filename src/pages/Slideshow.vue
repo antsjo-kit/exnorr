@@ -58,6 +58,7 @@ export default {
     };
   },
   mounted() {
+    this.setLanguage();
     if (process.isClient) {
       // browser only code
       this.slidePageInterval = setInterval(() => {
