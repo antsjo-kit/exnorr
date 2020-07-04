@@ -361,7 +361,9 @@ body {
       width: 320px !important;
       height: 320px !important;
     }
-
+    .rosa-tjaffs {
+      opacity: 1 !important;
+    }
     .countdown-timer-wrapper {
       opacity: 1;
     }

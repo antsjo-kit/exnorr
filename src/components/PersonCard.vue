@@ -7,7 +7,6 @@
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       class="rosa-tjaffs"
-      :class="{ 'birthday-tomorrow': isBirthdayTomorrow, birthday: isBirthday }"
     >
       <path
         d="M143.676 52.3326L143.641 0L119.943 0.037798L119.978 52.3704L143.676 52.3326Z"
