@@ -176,7 +176,7 @@ export default {
                   this.$router.push({ path: "/slideshow" });
                 }, 5000);
               }
-            }, timeOut);
+            }, 5000);
           }
         });
       }
