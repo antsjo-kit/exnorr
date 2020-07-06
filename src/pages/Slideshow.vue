@@ -8,7 +8,7 @@
           :fade="true"
           :speed="800"
           :autoplay="true"
-          :autoplay-speed="5000"
+          :autoplay-speed="changeImage"
           :initial-slide="1"
           v-show="
             $page &&
@@ -53,41 +53,41 @@ export default {
       selectedIndex: 0,
       loading: true,
       fadeInLoadingInterval: null,
-      changeSlideInterval: null,
-      slidePageInterval: null,
+      slidePageTimeout: null,
+      changePageTimeout: null,
+      changePageToPersons: 60000,
+      changeImage: 15000,
     };
   },
   mounted() {
     this.setLanguage();
     if (process.isClient) {
       // browser only code
-      this.slidePageInterval = setInterval(() => {
-        this.$router.push({ path: "/persons" });
-      }, 300000);
-      if (this.$refs && this.$refs.agilecarousel) {
-        this.changeSlideInterval = setInterval(() => {
-          this.$refs.agilecarousel.goToNext();
-        }, 15000);
-      }
+      this.slidePageTimeout = setTimeout(() => {
+        this.loading = true;
+        this.changePageTimeout = setTimeout(() => {
+          this.$router.push({ path: "/persons" });
+        }, 5000);
+      }, this.changePageToPersons);
     }
   },
   async created() {
     if (process.isClient) {
       // browser only code
-      this.fadeInLoadingInterval = setInterval(() => {
+      this.fadeInLoadingInterval = setTimeout(() => {
         this.loading = false;
       }, 1000);
     }
   },
   beforeDestroy() {
     if (this.fadeInLoadingInterval) {
-      clearInterval(this.fadeInLoadingInterval);
+      clearTimeout(this.fadeInLoadingInterval);
     }
-    if (this.changeSlideInterval) {
-      clearInterval(this.changeSlideInterval);
+    if (this.changePageTimeout) {
+      clearTimeout(this.changePageTimeout);
     }
-    if (this.slidePageInterval) {
-      clearInterval(this.slidePageInterval);
+    if (this.slidePageTimeout) {
+      clearTimeout(this.slidePageTimeout);
     }
   },
   methods: {

@@ -79,8 +79,8 @@ export default {
       sliding: false,
       loading: true,
       personsInterval: null,
-      lastSlideInterval: null,
       slidePageInterval: null,
+      changePageToSlideshow: null,
       fadeInLoadingPersonInterval: null,
       birthdayInterval: null,
     };
@@ -89,17 +89,20 @@ export default {
     if (this.personsInterval) {
       clearInterval(this.personsInterval);
     }
-    if (this.lastSlideInterval) {
-      clearInterval(this.lastSlideInterval);
-    }
     if (this.fadeInLoadingPersonInterval) {
-      clearInterval(this.fadeInLoadingPersonInterval);
+      clearTimeout(this.fadeInLoadingPersonInterval);
     }
     if (this.birthdayInterval) {
-      clearInterval(this.birthdayInterval);
+      clearTimeout(this.birthdayInterval);
+    }
+    if (this.changePageToSlideshow) {
+      clearTimeout(this.changePageToSlideshow);
     }
   },
   computed: {
+    slidesLeft: function() {
+      return "test";
+    },
     sortedPersonsByDate: function() {
       if (this.$page.persons.edges) {
         const personsArray = [...this.$page.persons.edges];
@@ -130,7 +133,7 @@ export default {
   created() {
     if (process.isClient) {
       // browser only code
-      this.fadeInLoadingPersonInterval = setInterval(() => {
+      this.fadeInLoadingPersonInterval = setTimeout(() => {
         this.loading = false;
       }, 1000);
     }
@@ -143,14 +146,19 @@ export default {
       this.birthdays = hasBirthdays;
       if (process.isClient) {
         // browser only code
-        this.birthdayInterval = setInterval(() => {
+        this.birthdayInterval = setTimeout(() => {
           this.$router.push({ path: "/slideshow" });
         }, 300000);
       }
     } else {
       let indexVariable = 0;
       let timeOut = 5000;
-      if (this.$page.persons.edges.length) {
+      if (
+        this.$page &&
+        this.$page.persons &&
+        this.$page.persons.edges &&
+        this.$page.persons.edges.length
+      ) {
         this.$nextTick(function() {
           if (process.isClient) {
             // browser only code
@@ -162,7 +170,11 @@ export default {
                 // this.$Progress.set(progress);
                 this.changeSlide(indexVariable);
               } else {
-                this.$router.push({ path: "/slideshow" });
+                console.log("asd");
+                this.loading = true;
+                this.changePageToSlideshow = setTimeout(() => {
+                  this.$router.push({ path: "/slideshow" });
+                }, 5000);
               }
             }, timeOut);
           }
