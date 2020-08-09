@@ -51,11 +51,9 @@ export default {
     lastName: {
       type: String,
     },
-  },
-  data() {
-    return {
-      daysLeft: 0,
-    };
+    daysLeft: {
+      type: Number,
+    },
   },
   components: {
     CountdownTimer,
@@ -93,7 +91,6 @@ export default {
       today.setYear(0);
       var Difference_In_Time = birthday.getTime() - today.getTime();
       var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-      this.daysLeft = Difference_In_Days;
       if (Math.abs(Difference_In_Days) == 1) {
         return true;
       } else {

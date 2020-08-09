@@ -22,11 +22,15 @@
             :index="i"
             :key="i"
           >
-            <template slot-scope="{ index, isCurrent, leftIndex, rightIndex }">
+            <template
+              slot-scope="{ index, isCurrent, leftIndex, rightIndex }"
+              v-if="node && node.bild"
+            >
               <PersonCard
                 :data-index="i"
                 :imgSrc="node.bild.file.url"
                 :birthday="node.fodelsedatum"
+                :daysLeft="node.daysLeft"
                 :surName="node.fornamn"
                 :lastName="node.efternamn"
                 :class="{
@@ -39,14 +43,16 @@
           </slide>
         </carousel-3d>
         <div class="person-birthdays" v-if="birthdays" style="color: white;">
-          <PersonBirthdayCard
-            v-for="birthday of birthdays"
-            :key="birthday.node.id"
-            :imgSrc="birthday.node.bild.file.url"
-            :birthday="birthday.node.fodelsedatum"
-            :surName="birthday.node.fornamn"
-            :lastName="birthday.node.efternamn"
-          />
+          <template v-for="birthday of birthdays">
+            <PersonBirthdayCard
+              :key="birthday.node.id"
+              :imgSrc="birthday.node.bild.file.url"
+              :birthday="birthday.node.fodelsedatum"
+              :surName="birthday.node.fornamn"
+              :lastName="birthday.node.efternamn"
+              v-if="birthday && birthday.node && birthday.node.bild"
+            />
+          </template>
         </div>
         <!-- <vue-progress-bar></vue-progress-bar> -->
       </div>
@@ -106,23 +112,42 @@ export default {
     sortedPersonsByDate: function() {
       if (this.$page.persons.edges) {
         const personsArray = [...this.$page.persons.edges];
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        today.setYear(0);
+        const today = this.$moment().format("YYYY-MM-DD");
 
         for (const { node } of personsArray) {
-          const birthday = new Date(Date.parse(node.fodelsedatum));
-          birthday.setHours(0, 0, 0, 0);
-          birthday.setYear(0);
-          var Difference_In_Time = birthday.getTime() - today.getTime();
-          var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-          node.daysLeft = Math.abs(Difference_In_Days);
+          const birthday = this.$moment(node.fodelsedatum);
+
+          // calculate age of the person
+          var age = this.$moment(today).diff(birthday, "years");
+          this.$moment(age).format("YYYY-MM-DD");
+          console.log("person age", age, node.fornamn);
+
+          var nextBirthday = this.$moment(birthday).add(age, "years");
+          this.$moment(nextBirthday).format("YYYY-MM-DD");
+
+          /* added one more year in case the birthday has already passed
+  to calculate date till next one. */
+          if (nextBirthday.isSame(today)) {
+            console.log("Cake!!");
+          } else {
+            nextBirthday = this.$moment(birthday).add(age + 1, "years");
+            node.daysLeft = nextBirthday.diff(today, "days");
+            console.log("else sats", node.daysLeft);
+          }
+
+          // const birthday = new Date(Date.parse(node.fodelsedatum));
+          // birthday.setFullYear(yearToday);
+          // const bday = this.$moment().fromNow(birthday);
+          // console.log(bday);
+          // // var Difference_In_Time = birthday.getTime() - today.getTime();
+          // // var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+          // // node.daysLeft = Math.abs(Difference_In_Days);
         }
 
         const sortedPersons = this._.orderBy(
           personsArray,
-          ["node.daysLeft"],
-          ["asc"]
+          ["node.birthday"],
+          ["desc"]
         );
         return sortedPersons;
       } else {
