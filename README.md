@@ -8,12 +8,12 @@
 - Drivs av: [Netlify](https://www.netlify.com/)
 
 ## Utveckling
-### Uteveckla
+### Utveckla
 1. ```git clone https://github.com/antsjo-kit/exnorr.git```
 1. ```yarn```
 2. ```gridsome develop```
 
-### Bygg
+### Bygga
 Pusha upp ändringar till master så tar netlify hand om resten. Länk till app: [ExNorrTV](https://exnorrtv.netlify.app/persons)
 
 ### Ändra innehåll
