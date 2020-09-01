@@ -3,7 +3,7 @@
 > Skapad med stor glädje av Fredrik Welander & Anton Sjölander :shipit:
 
 
-- Skapad med: [Gridsome](https://gridsome.org/docs/)
+- Skapad med: [Gridsome](https://gridsome.org/)
 - CMS: [Contentful](https://www.contentful.com/)
 - Drivs av: [Netlify](https://www.netlify.com/)
 
