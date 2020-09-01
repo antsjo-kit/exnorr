@@ -13,6 +13,7 @@
 1. ```git clone https://github.com/antsjo-kit/exnorr.git```
 1. ```yarn```
 2. ```gridsome develop```
+3. ``` skapa .env i root och fyll med info från``` [Linus.B](mailto:linus.brannstrom@knowit.se?subject=[Github]%20Knowit%20TV%20APP) eller [Daniel.F](mailto:daniel.funseth@knowit.se?subject=[Github]%20Knowit%20TV%20APP)
 
 ### Bygga
 Pusha upp ändringar till master så tar netlify hand om resten. Länk till app: [ExNorrTV](https://exnorrtv.netlify.app/persons)
