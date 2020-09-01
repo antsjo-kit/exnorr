@@ -17,4 +17,4 @@
 Pusha upp ändringar till master så tar netlify hand om resten. Länk till app: [ExNorrTV](https://exnorrtv.netlify.app/persons)
 
 ### Ändra innehåll
-Innehåll ändras på contentful. Fråga [Linus.B](mailto:linus.brannstrom@knowit.se?subject=[Github]%20Knowit%20TV%20APP) för mer information.
+Innehåll ändras på contentful. Fråga [Linus.B](mailto:linus.brannstrom@knowit.se?subject=[Github]%20Knowit%20TV%20APP) eller [Daniel.F](mailto:daniel.funseth@knowit.se?subject=[Github]%20Knowit%20TV%20APP) för mer information.
