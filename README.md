@@ -6,6 +6,7 @@
 - Skapad med: [Gridsome](https://gridsome.org/)
 - CMS: [Contentful](https://www.contentful.com/)
 - Drivs av: [Netlify](https://www.netlify.com/)
+- [ExNorrTV](https://exnorrtv.netlify.app/persons)
 
 ## Utveckling
 ### Utveckla
