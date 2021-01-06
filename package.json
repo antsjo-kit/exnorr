@@ -11,7 +11,7 @@
     "@contentful/rich-text-types": "^14.1.1",
     "@gridsome/source-contentful": "^0.5.0",
     "animate.css": "^4.1.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "datejs": "^1.0.0-rc3",
     "gridsome": "^0.7.0",
     "hooper": "^0.3.4",
