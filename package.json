@@ -15,7 +15,7 @@
     "datejs": "^1.0.0-rc3",
     "gridsome": "^0.7.0",
     "hooper": "^0.3.4",
-    "moment": "^2.27.0",
+    "moment": "^2.29.4",
     "rss-parser": "^3.8.0",
     "vue-agile": "^1.1.3",
     "vue-awesome-countdown": "^1.0.26",
